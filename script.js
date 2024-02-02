@@ -1,52 +1,51 @@
-var mark = document.getElementById("mark");
-var deleteButton = document.getElementById("delete")
-var add = document.querySelector("button")
-var child2 = document.querySelector(".child2")
+document.addEventListener('DOMContentLoaded', function() {
+  var mark = document.getElementById("mark");
+  var add = document.querySelector("#add");
+  var child2 = document.querySelector(".child2");
+  var main = document.querySelector(".main");
 
+  var task = [];
 
-var tasks = [];
-
-function addTask() {
-    var taskText = document.getElementById('new-task').value;
-    tasks.push(taskText);
-    
-   
-    var newChild2 = document.querySelector(".child2");
-    newChild2.textContent = taskText;
-    
-    
-    
-    document.getElementById('new-task').value = '';
-}
-
-function renderTasks() {
-    var list = document.getElementById('todo-list');
-    list.innerHTML = '';
-    for (var i = 0; i < tasks.length; i++) {
-        var li = document.createElement('li');
-        li.textContent = tasks[i];
-        list.appendChild(li);
+  function addTask() {
+    var tasksInput = document.getElementById("new-task");
+    var tasks = tasksInput.value;
+    if (tasks.trim() === "") {
+      window.alert("List is empty. Add tasks.");
+      return;
     }
-}
+    task.push(tasks);
+    var clonedDiv = child2.cloneNode(true);
+    clonedDiv.style.display = "flex"; // Set display to flex
+    main.appendChild(clonedDiv);
+    var deleteButton = clonedDiv.querySelector("#delete");
+    deleteButton.addEventListener('click', function() {
+        
+        main.removeChild(clonedDiv);
+    });
+    renderTask();
+    tasksInput.value = ""; // Clear the input field
+  }
 
-document.querySelector('.child1 button').addEventListener('click', function() {
+  function renderTask() {
+    var list = main.querySelector("#todo-list");
+    list.innerHTML = "";
+    for (var i = 0; i < task.length; i++) {
+      var li = document.createElement('li');
+      li.textContent = task[i];
+      list.appendChild(li);
+    }
+  }
+
+  function markColour() {
+    clonedDiv.style.backgroundColor = "green";
+  }
+
+  add.addEventListener('click', function() {
     addTask();
-    renderTasks();
-});
+    task.pop()
+  });
 
-document.getElementById('delete').addEventListener('click', function() {
-   
-    tasks.pop();
-    
-    
-    var child2Elements = document.querySelectorAll('.child2');
-    if (child2Elements.length > 0) {
-        var lastChild2 = child2Elements[child2Elements.length - 1];
-        lastChild2.remove();
-    }
-});
-
-document.getElementById('mark').addEventListener('click', function() {
-    var child2 = document.querySelector('.child2');
-    child2.style.backgroundColor = "green";
+  mark.addEventListener('click', function() {
+    markColour();
+  });
 });
